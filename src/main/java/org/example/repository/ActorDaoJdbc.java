@@ -91,7 +91,7 @@ public class ActorDaoJdbc implements ActorDao{
 
     @Override
     public void deleteActorById(int id) {
-        final String SQL = "DELETE FROM actor WHERE id = ?;";
+        final String SQL = "DELETE FROM actor WHERE actor_id = ?;";
 
         try(Connection con = DriverManager.getConnection(DB_URL, USER, PASS)){
             PreparedStatement st = con.prepareStatement(SQL);

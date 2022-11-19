@@ -1,5 +1,6 @@
 package org.example.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Actor {
@@ -8,7 +9,7 @@ public class Actor {
     private String lastName;
 
     //Utólag mutassam csak meg
-    private List<Film> films;
+    private List<Film> films = new ArrayList<>();
 
     public Actor() {
     }
