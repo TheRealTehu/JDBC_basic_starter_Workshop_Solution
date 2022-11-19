@@ -16,12 +16,11 @@ public class Film {
     private Rating rating;
     private Date lastUpdate;
     private List<String> specialFeatures;
-    private String fullText;
 
     public Film() {
     }
 
-    public Film(int id, String title, String description, int releaseYear, int languageId, int rentalDuration, double rentalRate, int length, double replacementCost, Rating rating, Date lastUpdate, List<String> specialFeatures, String fullText) {
+    public Film(int id, String title, String description, int releaseYear, int languageId, int rentalDuration, double rentalRate, int length, double replacementCost, Rating rating, Date lastUpdate, List<String> specialFeatures) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -34,7 +33,6 @@ public class Film {
         this.rating = rating;
         this.lastUpdate = lastUpdate;
         this.specialFeatures = specialFeatures;
-        this.fullText = fullText;
     }
 
     public int getId() {
@@ -131,14 +129,6 @@ public class Film {
 
     public void setSpecialFeatures(List<String> specialFeatures) {
         this.specialFeatures = specialFeatures;
-    }
-
-    public String getFullText() {
-        return fullText;
-    }
-
-    public void setFullText(String fullText) {
-        this.fullText = fullText;
     }
 
     @Override
