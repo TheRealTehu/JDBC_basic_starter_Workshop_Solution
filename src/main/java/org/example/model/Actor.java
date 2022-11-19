@@ -1,15 +1,9 @@
 package org.example.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Actor {
     private int id;
     private String firstName;
     private String lastName;
-
-    //Utólag mutassam csak meg
-    private List<Film> films = new ArrayList<>();
 
     public Actor() {
     }
@@ -43,15 +37,6 @@ public class Actor {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-
-    public List<Film> getFilms() {
-        return films;
-    }
-
-    public void setFilms(List<Film> films) {
-        this.films = films;
-    }
-
     @Override
     public String toString() {
         return "Actor: " + "id= " + id + ", firstName= " + firstName + ", lastName= " + lastName;

@@ -18,9 +18,6 @@ public class Film {
     private List<String> specialFeatures;
     private String fullText;
 
-    //Csak utólag
-    private List<Actor> actors;
-
     public Film() {
     }
 
@@ -142,14 +139,6 @@ public class Film {
 
     public void setFullText(String fullText) {
         this.fullText = fullText;
-    }
-
-    public List<Actor> getActors() {
-        return actors;
-    }
-
-    public void setActors(List<Actor> actors) {
-        this.actors = actors;
     }
 
     @Override
