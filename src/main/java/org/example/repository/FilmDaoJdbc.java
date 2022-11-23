@@ -18,33 +18,57 @@ public class FilmDaoJdbc implements FilmDao {
 
     @Override
     public List<Film> getAllFilms() {
-        final String SQL = "SELECT film_id, title, description, release_year, language_id, rental_duration, rental_rate," +
-                " length, replacement_cost, rating, last_update, special_features FROM film;";
+        final String SQL = "SELECT film_id, title, description, release_year, language_id, rental_duration, rental_rate, " +
+                "length, replacement_cost, rating, last_update, special_features, " +
+                "(unnest(fulltext)).lexeme FROM film group by film_id order by film_id asc;";
 
         try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS)) {
             PreparedStatement st = con.prepareStatement(SQL);
 
             ResultSet rs = st.executeQuery();
             List<Film> films = new ArrayList<>();
+
+            Film film = new Film();
+
             while (rs.next()) {
-                Film film = new Film();
-                film.setId(rs.getInt(1));
-                film.setTitle(rs.getString(2));
-                film.setDescription(rs.getString(3));
-                film.setReleaseYear(rs.getInt(4));
-                film.setLanguageId(rs.getInt(5));
-                film.setRentalDuration(rs.getInt(6));
-                film.setRentalRate(rs.getDouble(7));
-                film.setLength(rs.getInt(8));
-                film.setReplacementCost(rs.getDouble(9));
-                film.setRating(getProperRating(rs.getString(10)));
-                film.setLastUpdate(rs.getDate(11));
-                film.setSpecialFeatures(getSpecialFeatures(rs.getString(12)));
+                if(film.getId() == null){
+                    film.setId(rs.getInt(1));
+                    film.setTitle(rs.getString(2));
+                    film.setDescription(rs.getString(3));
+                    film.setReleaseYear(rs.getInt(4));
+                    film.setLanguageId(rs.getInt(5));
+                    film.setRentalDuration(rs.getInt(6));
+                    film.setRentalRate(rs.getDouble(7));
+                    film.setLength(rs.getInt(8));
+                    film.setReplacementCost(rs.getDouble(9));
+                    film.setRating(getProperRating(rs.getString(10)));
+                    film.setLastUpdate(rs.getDate(11));
+                    film.setSpecialFeatures(getSpecialFeatures(rs.getString(12)));
+                    film.addToFulLText(rs.getString(13));
+                } else if(film.getId() == rs.getInt(1)){
+                    film.addToFulLText(rs.getString(13));
+                } else {
+                    films.add(film);
+                    film = new Film();
 
-                film.setFullText(getFullText(film.getId()));
+                    film.setId(rs.getInt(1));
+                    film.setTitle(rs.getString(2));
+                    film.setDescription(rs.getString(3));
+                    film.setReleaseYear(rs.getInt(4));
+                    film.setLanguageId(rs.getInt(5));
+                    film.setRentalDuration(rs.getInt(6));
+                    film.setRentalRate(rs.getDouble(7));
+                    film.setLength(rs.getInt(8));
+                    film.setReplacementCost(rs.getDouble(9));
+                    film.setRating(getProperRating(rs.getString(10)));
+                    film.setLastUpdate(rs.getDate(11));
+                    film.setSpecialFeatures(getSpecialFeatures(rs.getString(12)));
+                    film.addToFulLText(rs.getString(13));
+                }
 
-                films.add(film);
             }
+
+            films.add(film);
 
             return films;
 
@@ -52,26 +76,6 @@ public class FilmDaoJdbc implements FilmDao {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private List<String> getFullText(int id) {
-        final String SQL = "SELECT (unnest(fulltext)).lexeme from film where film_id = ?;";
-        List<String> fullText = new ArrayList<>();
-        try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS)){
-            PreparedStatement st = con.prepareStatement(SQL);
-            st.setInt(1, id);
-
-            ResultSet rs = st.executeQuery();
-
-            while (rs.next()){
-                fullText.add(rs.getString(1));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return fullText;
     }
 
     private List<String> getSpecialFeatures(String features) {

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Film {
-    private int id;
+    private Integer id;
     private String title;
     private String description;
     private int releaseYear;
@@ -22,9 +22,10 @@ public class Film {
     private List<String> fullText;
 
     public Film() {
+        fullText = new ArrayList<>();
     }
 
-    public Film(int id, String title, String description, int releaseYear, int languageId, int rentalDuration, double rentalRate, int length, double replacementCost, Rating rating, Date lastUpdate, List<String> specialFeatures, List<String> fullText) {
+    public Film(Integer id, String title, String description, int releaseYear, int languageId, int rentalDuration, double rentalRate, int length, double replacementCost, Rating rating, Date lastUpdate, List<String> specialFeatures, List<String> fullText) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -40,7 +41,7 @@ public class Film {
         this.fullText = fullText;
     }
 
-    public Film(int id, String title, String description, int releaseYear, int languageId, int rentalDuration, double rentalRate, int length, double replacementCost, Rating rating, Date lastUpdate, List<String> specialFeatures) {
+    public Film(Integer id, String title, String description, int releaseYear, int languageId, int rentalDuration, double rentalRate, int length, double replacementCost, Rating rating, Date lastUpdate, List<String> specialFeatures) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -56,11 +57,11 @@ public class Film {
         fullText = new ArrayList<>();
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -158,6 +159,10 @@ public class Film {
 
     public void setFullText(List<String> fullText) {
         this.fullText = fullText;
+    }
+
+    public void addToFulLText(String text){
+        fullText.add(text);
     }
 
     @Override
