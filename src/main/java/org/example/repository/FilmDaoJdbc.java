@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FilmDaoJdbc implements FilmDao {
 
@@ -141,7 +142,8 @@ public class FilmDaoJdbc implements FilmDao {
     @Override
     public Film findFilmByTitle(String title) {
         final String SQL = "SELECT film_id, title, description, release_year, language_id, rental_duration, rental_rate," +
-                " length, replacement_cost, rating, last_update, special_features FROM film WHERE title = ?;";
+                " length, replacement_cost, rating, last_update, special_features, (unnest(fulltext)).lexeme" +
+                " FROM film WHERE title = ?;";
 
         try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS)) {
             PreparedStatement st = con.prepareStatement(SQL);
@@ -153,10 +155,27 @@ public class FilmDaoJdbc implements FilmDao {
                 return null;
             }
 
-            return new Film(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4),
-                    rs.getInt(5), rs.getInt(6), rs.getDouble(7), rs.getInt(8),
-                    rs.getDouble(9), getProperRating(rs.getString(10)), rs.getDate(11),
-                    getSpecialFeatures(rs.getString(12)));
+            Film film = new Film();
+
+            film.setId(rs.getInt(1));
+            film.setTitle(rs.getString(2));
+            film.setDescription(rs.getString(3));
+            film.setReleaseYear(rs.getInt(4));
+            film.setLanguageId(rs.getInt(5));
+            film.setRentalDuration(rs.getInt(6));
+            film.setRentalRate(rs.getDouble(7));
+            film.setLength(rs.getInt(8));
+            film.setReplacementCost(rs.getDouble(9));
+            film.setRating(getProperRating(rs.getString(10)));
+            film.setLastUpdate(rs.getDate(11));
+            film.setSpecialFeatures(getSpecialFeatures(rs.getString(12)));
+            film.addToFulLText(rs.getString(13));
+
+            while (rs.next()){
+                film.addToFulLText(rs.getString(13));
+            }
+
+            return film;
 
         } catch (SQLException e) {
             e.printStackTrace();
