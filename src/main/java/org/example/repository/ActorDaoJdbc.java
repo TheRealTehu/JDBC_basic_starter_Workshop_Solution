@@ -11,7 +11,7 @@ public class ActorDaoJdbc implements ActorDao{
 
     static final String USER = "postgres";
 
-    static final String PASS = "tehu";
+    static final String PASS = "postgres";
 
     @Override
     public List<Actor> getAllActors() {

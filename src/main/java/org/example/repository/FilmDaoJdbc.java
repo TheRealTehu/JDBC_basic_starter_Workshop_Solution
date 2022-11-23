@@ -14,7 +14,7 @@ public class FilmDaoJdbc implements FilmDao {
 
     static final String USER = "postgres";
 
-    static final String PASS = "tehu";
+    static final String PASS = "postgres";
 
     @Override
     public List<Film> getAllFilms() {
@@ -41,6 +41,8 @@ public class FilmDaoJdbc implements FilmDao {
                 film.setLastUpdate(rs.getDate(11));
                 film.setSpecialFeatures(getSpecialFeatures(rs.getString(12)));
 
+                film.setFullText(getFullText(film.getId()));
+
                 films.add(film);
             }
 
@@ -50,6 +52,26 @@ public class FilmDaoJdbc implements FilmDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private List<String> getFullText(int id) {
+        final String SQL = "SELECT (unnest(fulltext)).lexeme from film where film_id = ?;";
+        List<String> fullText = new ArrayList<>();
+        try (Connection con = DriverManager.getConnection(DB_URL, USER, PASS)){
+            PreparedStatement st = con.prepareStatement(SQL);
+            st.setInt(1, id);
+
+            ResultSet rs = st.executeQuery();
+
+            while (rs.next()){
+                fullText.add(rs.getString(1));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return fullText;
     }
 
     private List<String> getSpecialFeatures(String features) {
